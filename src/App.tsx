@@ -74,7 +74,7 @@ export default function App() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-neutral-900">AgriTech Opportunity Radar</h1>
             <p className="text-neutral-500 mt-1">
-              AI-powered web scraper for conferences, grants, speaking engagements, and jobs.
+              AI-powered web scraper for conferences, grants, speaking engagements, and sponsorships.
             </p>
           </div>
           <div className="flex items-center gap-2 bg-white p-2 rounded-lg border shadow-sm">
@@ -140,7 +140,7 @@ export default function App() {
                       <SelectItem value="Conferences">Conferences</SelectItem>
                       <SelectItem value="Grants">Grants</SelectItem>
                       <SelectItem value="Speaking Engagements">Speaking Engagements</SelectItem>
-                      <SelectItem value="Jobs">Jobs</SelectItem>
+                      <SelectItem value="Sponsorships">Sponsorships</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -171,7 +171,7 @@ export default function App() {
                 <ul className="list-disc pl-4 space-y-1">
                   <li>Global AgriTech conferences</li>
                   <li>NGO & ICT4D event listings</li>
-                  <li>Job boards and career pages</li>
+                  <li>Sponsorship prospectuses and exhibitor pages</li>
                   <li>Public social media announcements</li>
                   <li>Industry news and blogs</li>
                 </ul>
@@ -220,8 +220,8 @@ export default function App() {
                                 opp.type === 'Conference' ? 'default' : 
                                 opp.type === 'Grant' ? 'destructive' : 
                                 opp.type === 'Speaking Engagement' ? 'secondary' : 
-                                opp.type === 'Job' ? 'outline' : 'outline'
-                              } className={opp.type === 'Job' ? 'bg-blue-100 text-blue-800 hover:bg-blue-200 border-blue-200' : ''}>
+                                opp.type === 'Sponsorship' ? 'outline' : 'outline'
+                              } className={opp.type === 'Sponsorship' ? 'bg-amber-100 text-amber-800 hover:bg-amber-200 border-amber-200' : ''}>
                                 {opp.type}
                               </Badge>
                               <span className="text-xs font-medium text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full">
@@ -268,7 +268,7 @@ export default function App() {
                   </div>
                   <h3 className="text-lg font-medium text-neutral-900 mb-1">No opportunities found yet</h3>
                   <p className="text-neutral-500 max-w-sm">
-                    Click "Find Opportunities" to scan the web for events, conferences, jobs, and grants relevant to your profile.
+                    Click "Find Opportunities" to scan the web for events, conferences, sponsorships, and grants relevant to your profile.
                   </p>
                 </CardContent>
               </Card>

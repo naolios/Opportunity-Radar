@@ -4,7 +4,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export interface Opportunity {
   title: string;
-  type: "Conference" | "Speaking Engagement" | "Grant" | "Networking" | "Job" | "Other";
+  type: "Conference" | "Speaking Engagement" | "Grant" | "Networking" | "Sponsorship" | "Other";
   date: string;
   location: string;
   description: string;
@@ -20,22 +20,41 @@ export async function scanOpportunities(
   targetCategory: string
 ): Promise<Opportunity[]> {
   const categoryPrompt = targetCategory === "All" 
-    ? "upcoming travel opportunities, conferences, speaking engagements, grants, networking events, and job opportunities"
+    ? "upcoming travel opportunities, conferences, speaking engagements, grants, networking events, and sponsorship opportunities"
     : `upcoming ${targetCategory.toLowerCase()}`;
+
+  let additionalInstructions = `
+CRITICAL: All opportunities MUST be currently active and up-to-date. Do NOT include any expired opportunities or those with a passed deadline. Ensure all deadlines and event dates are in the future.`;
+
+  if (targetCategory === "All" || targetCategory === "Grants") {
+    additionalInstructions += `
+For Grants and funding opportunities, you MUST specifically search and include active opportunities from the following top AgriTech investors:
+- AgFunder (https://agfunder.com)
+- Omnivore (https://www.omnivore.vc)
+- The Yield Lab (https://www.theyieldlab.com)
+- S2G Ventures (https://www.s2gventures.com)
+- GROW Accelerator (https://gogrow.co)
+- Better Bite Ventures (https://www.betterbite.vc)
+- AgriZeroNZ (https://agrizeronz.com)
+- Blue Horizon (https://bluehorizon.com)
+- Supply Change Capital (https://supplychange.fund)
+- Rabo Ventures (https://www.rabobank.com)`;
+  }
 
   const prompt = `
 You are an expert career and networking assistant for an AgriTech NGO.
 The user is a ${role} at ${organization}, working on a product called ${product}.
 They are currently based in ${location}.
 
-Your task is to search the web (using Google Search) for ${categoryPrompt} where they can promote ${product} or advance their career.
-Prioritize events in Africa, global virtual events, or major international AgriTech/ICT4D conferences, as well as relevant job openings in the AgriTech sector.
-Search across news, event listings, LinkedIn posts (if public), job boards, and blogs.
+Your task is to search the web (using Google Search) for ${categoryPrompt} where they can promote ${product}.
+Prioritize events in Africa, global virtual events, or major international AgriTech/ICT4D conferences, as well as relevant sponsorship opportunities.
+Search across news, event listings, LinkedIn posts (if public), and blogs.
+${additionalInstructions}
 
 Extract the top 5-10 most relevant opportunities.
 For each opportunity, provide:
-- title: The name of the event or opportunity (e.g., job title).
-- type: "Conference", "Speaking Engagement", "Grant", "Networking", "Job", or "Other".
+- title: The name of the event or opportunity.
+- type: "Conference", "Speaking Engagement", "Grant", "Networking", "Sponsorship", or "Other".
 - date: When it happens (e.g., "October 12-14, 2026" or "TBD").
 - location: Where it is (e.g., "Nairobi, Kenya", "Virtual", "Addis Ababa, Ethiopia").
 - description: A short description of why it's relevant for promoting ${product}.
