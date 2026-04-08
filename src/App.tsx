@@ -72,7 +72,7 @@ export default function App() {
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-neutral-900">AgriTech Opportunity Radar</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-neutral-900">FarmerChat Opportunity Radar</h1>
             <p className="text-neutral-500 mt-1">
               AI-powered web scraper for conferences, grants, speaking engagements, and sponsorships.
             </p>
@@ -141,6 +141,7 @@ export default function App() {
                       <SelectItem value="Grants">Grants</SelectItem>
                       <SelectItem value="Speaking Engagements">Speaking Engagements</SelectItem>
                       <SelectItem value="Sponsorships">Sponsorships</SelectItem>
+                      <SelectItem value="AI funds">AI Funds</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -21,6 +21,8 @@ export async function scanOpportunities(
 ): Promise<Opportunity[]> {
   const categoryPrompt = targetCategory === "All" 
     ? "upcoming travel opportunities, conferences, speaking engagements, grants, networking events, and sponsorship opportunities"
+    : targetCategory === "AI funds"
+    ? "AI grants, AI funding for nonprofits and impact startups, and AI venture funds"
     : `upcoming ${targetCategory.toLowerCase()}`;
 
   let additionalInstructions = `
@@ -39,6 +41,23 @@ For Grants and funding opportunities, you MUST specifically search and include a
 - Blue Horizon (https://bluehorizon.com)
 - Supply Change Capital (https://supplychange.fund)
 - Rabo Ventures (https://www.rabobank.com)`;
+  }
+
+  if (targetCategory === "All" || targetCategory === "AI funds") {
+    additionalInstructions += `
+For AI funds, you MUST specifically search for active opportunities from the following sources, as well as many more related relevant available funding sources:
+- OpenAI People-First AI Fund
+- Google.org AI for Social Good Program
+- UNICEF Venture Fund
+- Mercy Corps Ventures (AI for Financial Resilience)
+- Technovation AI Ventures Accelerator
+- AI for Good Impact Awards
+- EU Grants & Accelerators (e.g., FFPlus)
+- Digital Rights Fund (WANA Region)
+- IndiaAI Innovation Challenge 2026
+- FundsforNGOs (AI-related grant opportunities)
+- Zeffy AI Grant Finder
+Also, expand your search to find other relevant AI grants for nonprofits and impact startups.`;
   }
 
   const prompt = `
