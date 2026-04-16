@@ -7,9 +7,10 @@ import { Label } from "./components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/dropdown-menu";
 import { Toaster } from "./components/ui/sonner";
 import { toast } from "sonner";
-import { Loader2, Search, Mail, ExternalLink, MapPin, Calendar, Briefcase, Building } from "lucide-react";
+import { Loader2, Search, Mail, ExternalLink, MapPin, Calendar, Briefcase, Building, Share2, MessageCircle, Send, MessageSquare, Copy } from "lucide-react";
 
 export default function App() {
   const [role, setRole] = useState("Product Manager");
@@ -63,6 +64,37 @@ export default function App() {
     const body = encodeURIComponent(`Here are the latest opportunities found for promoting ${product}:\n\n${bodyText}`);
     
     window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  };
+
+  const handleShare = (opp: Opportunity, platform: string) => {
+    const text = `Check out this opportunity: ${opp.title}\n\nType: ${opp.type}\nDate: ${opp.date}\nLocation: ${opp.location}\n\n${opp.description}`;
+    const url = opp.url;
+    const encodedText = encodeURIComponent(text + "\n\n" + url);
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(opp.title);
+
+    let shareUrl = "";
+
+    switch (platform) {
+      case "whatsapp":
+        shareUrl = `https://wa.me/?text=${encodedText}`;
+        break;
+      case "telegram":
+        shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(text)}`;
+        break;
+      case "email":
+        shareUrl = `mailto:?subject=${encodedTitle}&body=${encodedText}`;
+        break;
+      case "google-chat":
+      case "copy":
+        navigator.clipboard.writeText(text + "\n\n" + url);
+        toast.success("Copied to clipboard!");
+        return;
+    }
+
+    if (shareUrl) {
+      window.open(shareUrl, "_blank");
+    }
   };
 
   return (
@@ -231,15 +263,41 @@ export default function App() {
                             </div>
                             <h3 className="text-lg font-bold text-neutral-900 leading-tight">{opp.title}</h3>
                           </div>
-                          <a 
-                            href={opp.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            title="Visit Link"
-                            className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "shrink-0")}
-                          >
-                            <ExternalLink className="w-5 h-5 text-neutral-400 hover:text-neutral-900" />
-                          </a>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" title="Share Opportunity">
+                                  <Share2 className="w-5 h-5 text-neutral-400 hover:text-neutral-900" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleShare(opp, 'whatsapp')}>
+                                  <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleShare(opp, 'telegram')}>
+                                  <Send className="w-4 h-4 mr-2" /> Telegram
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleShare(opp, 'google-chat')}>
+                                  <MessageSquare className="w-4 h-4 mr-2" /> Google Chat
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleShare(opp, 'email')}>
+                                  <Mail className="w-4 h-4 mr-2" /> Email
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleShare(opp, 'copy')}>
+                                  <Copy className="w-4 h-4 mr-2" /> Copy to Clipboard
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                            <a 
+                              href={opp.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              title="Visit Link"
+                              className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
+                            >
+                              <ExternalLink className="w-5 h-5 text-neutral-400 hover:text-neutral-900" />
+                            </a>
+                          </div>
                         </div>
                         
                         <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-neutral-600 mb-4">
