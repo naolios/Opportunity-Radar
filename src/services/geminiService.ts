@@ -1,6 +1,30 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
+
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+export async function scanOpportunities(
+  role: string,
+  organization: string,
+  product: string,
+  location: string,
+  targetCategory: string
+) {
+  // Call your local backend API instead of calling Gemini directly
+  const response = await fetch('/api/scan', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ role, organization, product, location, targetCategory }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch from backend');
+  }
+
+  const data = await response.json();
+  return data.opportunities; // Return the parsed array
+}
 
 export interface Opportunity {
   title: string;
